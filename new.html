@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youssef Afify | Upwork Systems & Client Acquisition</title>
+
+    <!-- CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lux: {
+                            black: '#070708',
+                            dark: '#0e0e11',
+                            card: '#131317',
+                            border: '#26262e',
+                            gold: '#d4af37',
+                            goldLight: '#f3e5ab',
+                            cream: '#f4f3ef'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        jakarta: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070708;
+            color: #f4f3ef;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #9e822d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .gold-border-glow:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .modal-blur {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* ================= REVIEW CAROUSEL (scroll-snap based — bulletproof) =================
+           Each slide is a hard 100% of the viewport. Scrolling is done in JS via scrollTo(),
+           snap forces it to stop exactly on slide boundaries, and the outer wrapper adds real
+           breathing room around the whole carousel plus padding inside each slide so text
+           never touches the edges or bleeds into the next/previous card. */
+        .carousel-viewport {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            display: flex;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .carousel-viewport::-webkit-scrollbar {
+            display: none;
+        }
+
+        .review-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            max-width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            box-sizing: border-box;
+        }
+
+        .review-slide-inner {
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .clamp-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-lux-gold selection:text-lux-black">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-5 md:px-8 py-4 backdrop-blur-md bg-lux-black/80 border-b border-lux-border/50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="#" class="font-cinzel text-lg md:text-xl font-bold tracking-widest text-lux-cream">
+                YOUSSEF <span class="gold-gradient-text">AFIFY</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-gray-400">
+                <a href="#testimonials" class="hover:text-lux-gold transition-colors">Testimonials</a>
+                <a href="#reviews" class="hover:text-lux-gold transition-colors">Reviews</a>
+                <a href="#services" class="hover:text-lux-gold transition-colors">Services</a>
+                <a href="#vault" class="hover:text-lux-gold transition-colors">Resources</a>
+            </div>
+
+            <button onclick="openBookingModal('1-on-1 Strategy Call ($30 / 30 Mins)')" class="px-5 py-2.5 bg-lux-gold text-lux-black text-xs font-bold uppercase tracking-wider rounded-sm hover:bg-lux-goldLight transition-all">
+                Book Call
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-6xl mx-auto px-6 pt-28 md:pt-36 pb-24">
+
+        <!-- HERO SECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-20 md:mb-28">
+            <div class="lg:col-span-7">
+                <div class="inline-block px-3 py-1 border border-lux-gold/40 bg-lux-gold/10 text-lux-goldLight text-[11px] font-semibold uppercase tracking-widest mb-6">
+                    Upwork Systems & Freelance Scale
+                </div>
+
+                <h1 class="font-cinzel text-3xl sm:text-5xl font-bold leading-tight mb-6 text-lux-cream">
+                    Land High-Paying Clients. <br>
+                    <span class="gold-gradient-text italic">Without The Guesswork.</span>
+                </h1>
+
+                <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-xl mb-8">
+                    I help freelancers build top-converting Upwork profiles, write irresistible proposals, and close long-term retainers.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#vault" class="w-full sm:w-auto px-8 py-4 bg-lux-gold text-lux-black text-center text-xs font-bold uppercase tracking-widest hover:bg-lux-goldLight transition-all">
+                        Get Free PDFs
+                    </a>
+                    <a href="#services" class="w-full sm:w-auto px-8 py-4 border border-lux-border text-center text-gray-300 text-xs font-bold uppercase tracking-widest hover:border-lux-gold/50 transition-all">
+                        View Offers
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Image (Full Color) -->
+            <div class="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
+                <div class="relative w-full max-w-xs sm:max-w-sm aspect-[4/5] p-2 border border-lux-gold/40 bg-lux-dark">
+                    <div class="w-full h-full relative overflow-hidden">
+                        <img src="IMG_9677.jpg" alt="Youssef Afify" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1374&auto=format&fit=crop'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-lux-black via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-4 left-4 right-4 border-l-2 border-lux-gold pl-3">
+                            <h3 class="font-cinzel text-lg font-bold text-lux-cream">Youssef Afify</h3>
+                            <p class="text-[11px] uppercase tracking-wider text-lux-goldLight">Client Acquisition & Upwork Specialist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. CHAT TESTIMONIALS (FIRST) -->
+        <section id="testimonials" class="mb-20 md:mb-28 border-t border-lux-border/60 pt-16">
+            <div class="mb-10">
+                <p class="text-lux-gold text-xs uppercase tracking-widest font-semibold mb-2">Direct Results</p>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-bold">Student & Mentorship Proof</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Chat 1: Mariam -->
+                <div class="bg-lux-card border border-lux-border p-6 flex flex-col justify-between">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-lux-border">
+                            <div class="w-9 h-9 rounded-full bg-lux-gold/20 flex items-center justify-center text-lux-gold font-bold text-xs">M</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-lux-cream">Mariam</h4>
+                                <p class="text-[10px] text-emerald-400">Beginner &bull; First Client Landed</p>
+                            </div>
+                        </div>
+
+                        <!-- Speech Bubbles -->
+                        <div class="space-y-3 font-sans text-xs">
+                            <div class="bg-lux-dark border border-lux-border p-3 text-right text-gray-200 rounded-lg">
+                                "انا جالي اول كلاينت من اسبوع 😍😍"
+                            </div>
+                            <div class="bg-purple-900/30 border border-purple-500/30 p-3 text-left text-purple-200 rounded-lg">
+                                "Was the document I sent you of any help?"
+                            </div>
+                            <div class="bg-lux-dark border border-lux-border p-3 text-right text-gray-200 rounded-lg">
+                                "اه هو اللي كتباه شكرا تسلم اوي 🤩🤩"
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-gray-400 italic">Started from zero and landed her first paying client using the outreach document & frameworks.</p>
+                </div>
+
+                <!-- Chat 2: Hisham -->
+                <div class="bg-lux-card border border-lux-border p-6 flex flex-col justify-between">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-lux-border">
+                            <div class="w-9 h-9 rounded-full bg-lux-gold/20 flex items-center justify-center text-lux-gold font-bold text-xs">H</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-lux-cream">Hisham</h4>
+                                <p class="text-[10px] text-emerald-400">AI Engineer &bull; Closing $20k+ Deals</p>
+                            </div>
+                        </div>
+
+                        <!-- Voice Note & Text Quote -->
+                        <div class="bg-lux-dark border border-lux-border p-4 space-y-3 text-xs text-gray-300">
+                            <div class="flex items-center gap-2 text-lux-gold text-xs">
+                                <i class="fa-solid fa-microphone"></i> <span>Voice Note Transcribed (0:58)</span>
+                            </div>
+                            <p class="italic text-gray-200">
+                                "Forgot to say in the voice note, the offer on the automation behind your business, that's on me, no charge. You saved me money today, only fair 🤝 Good luck with everything man ❤️"
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-gray-400 italic">Expert AI Engineer closing $20k+ deals provided instant ROI through business & strategy optimization.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. OFFICIAL REVIEWS SECTION (scroll-snap carousel — exactly one slide visible) -->
+        <section id="reviews" class="mb-20 md:mb-28">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="flex text-amber-400 gap-1 text-sm">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="font-bold text-lux-gold text-sm">5.0 / 5.0 Rating</span>
+                    </div>
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-bold">Verified Client Reviews</h2>
+                </div>
+
+                <!-- Carousel Nav Controls -->
+                <div class="flex items-center gap-3">
+                    <button onclick="prevReview()" class="w-10 h-10 border border-lux-gold/40 text-lux-gold hover:bg-lux-gold hover:text-lux-black transition-all flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button onclick="nextReview()" class="w-10 h-10 border border-lux-gold/40 text-lux-gold hover:bg-lux-gold hover:text-lux-black transition-all flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Carousel Outer Card Container -->
+            <div class="border border-lux-gold/30 bg-lux-card">
+                <div id="review-track" class="carousel-viewport">
+
+                    <!-- Review 1 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">Short form editor with simple motion design</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">5.0 Star Verified</span>
+                        </div>
+                        <p id="rev-text-1" class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-4 clamp-text">
+                            "I had the opportunity to work with Youssef, and I can confidently say that the experience was excellent from start to finish. From our very first exchange, he showed great professionalism, was attentive, and most importantly very understanding of my expectations. As for the quality of work, it is simply outstanding. The final result was clean, dynamic, and perfectly aligned with what I had in mind—if not even better. Speed of execution was impressive. It's a real pleasure collaborating with someone this serious and skilled."
+                        </p>
+                        <button onclick="toggleReadMore('rev-text-1', this)" class="text-xs text-lux-gold font-bold underline mb-6 inline-block">Read Full Review</button>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Reliable</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Committed to Quality</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Clear Communicator</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Detail Oriented</span>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 2 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">Long-Form YouTube Video Editor</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">5.0 Star Rating</span>
+                        </div>
+                        <p id="rev-text-2" class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-4 clamp-text">
+                            "Youssef is a talented editor with a good attitude and was receptive to detailed feedback throughout the project. He showed a willingness to learn and adapt to a specific documentary editing style, and I appreciated his professionalism during our discussions. Our project required a very specialized visual language centered around information design, and he made progress as we refined that direction together."
+                        </p>
+                        <button onclick="toggleReadMore('rev-text-2', this)" class="text-xs text-lux-gold font-bold underline mb-6 inline-block">Read Full Review</button>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Collaborative</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Solution Oriented</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Accountable for Outcomes</span>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 3 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">Fitness Vlog Manager for The Journey Series</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">Verified Client</span>
+                        </div>
+                        <p class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-6">
+                            "Smart and Professional in work, has a great knowledge of YouTube and social media posting."
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Professional</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Social Media Systems</span>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 4 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">Repeat Client Collaboration</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">5.0 Star Repeat Hire</span>
+                        </div>
+                        <p id="rev-text-4" class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-4 clamp-text">
+                            "This is my second project with Youssef, and once again it was a great experience. I have nothing but good things to say. He is an excellent professional, always delivers before the deadline, and has very clear and efficient communication. I highly recommend working with him."
+                        </p>
+                        <button onclick="toggleReadMore('rev-text-4', this)" class="text-xs text-lux-gold font-bold underline mb-6 inline-block">Read Full Review</button>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Reliable</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Clear Communicator</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Fast Turnaround</span>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 5 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">B2B Post-Production Specialist</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">Podcasts & Events</span>
+                        </div>
+                        <p class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-6">
+                            "Youssef communicated frequently and delivered an aesthetically pleasing video. The editing was on point. It was super engaging."
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Committed to Quality</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Clear Communicator</span>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 6 -->
+                    <div class="review-slide">
+                        <div class="review-slide-inner p-6 md:p-10">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 border-b border-lux-border pb-4">
+                            <h3 class="font-cinzel text-base md:text-lg font-bold text-lux-goldLight pr-2">Motion Graphics & Audio Post-Production</h3>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">5.0 Star Verified</span>
+                        </div>
+                        <p id="rev-text-6" class="text-gray-200 text-xs md:text-sm leading-relaxed italic mb-4 clamp-text">
+                            "Youssef brings mastery across the full post-production spectrum from raw footage assembly to final color grading to motion graphics implementation. Every project he touches is elevated. His attention to detail is meticulous, his turnaround times are reliable, and his output is always broadcast-ready. What impresses us most: his ability to take client vision and translate it into finished product without endless revisions. He asks the right questions upfront, delivers solid first cuts, and iterates efficiently. Works seamlessly as part of a team or independently. For B2B content, corporate storytelling, or high-volume project pipelines, Youssef is the gold standard. Highly, highly recommended."
+                        </p>
+                        <button onclick="toggleReadMore('rev-text-6', this)" class="text-xs text-lux-gold font-bold underline mb-6 inline-block">Read Full Review</button>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Reliable</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Committed to Quality</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Solution Oriented</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Clear Communicator</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Detail Oriented</span>
+                            <span class="px-2.5 py-1 bg-lux-dark border border-lux-border text-gray-300 text-[10px]">Accountable for Outcomes</span>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Dots indicator -->
+            <div id="review-dots" class="flex items-center justify-center gap-2 mt-5"></div>
+        </section>
+
+        <!-- 3. PRODUCTIZED SERVICES -->
+        <section id="services" class="mb-20 md:mb-28">
+            <div class="mb-10">
+                <p class="text-lux-gold text-xs uppercase tracking-widest font-semibold mb-2">Work With Me</p>
+                <h2 class="font-cinzel text-2xl md:text-4xl font-bold">Services & Consultation</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- 1-on-1 Consultation Call ($30 / 30 Mins) -->
+                <div class="p-8 bg-lux-card border border-lux-border flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 bg-lux-gold/10 text-lux-gold border border-lux-gold/30 text-[10px] font-bold uppercase tracking-wider">$30 / 30 Mins</span>
+                        </div>
+                        <h3 class="font-cinzel text-xl font-bold mb-3">1-on-1 Strategy Call</h3>
+                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
+                            Direct 30-minute session covering profile restructuring, proposal writing, outreach strategy, or starting your freelancing career from scratch.
+                        </p>
+                    </div>
+                    <button onclick="openBookingModal('1-on-1 Strategy Call ($30 / 30 Mins)')" class="w-full py-3.5 bg-lux-gold text-lux-black font-bold text-xs uppercase tracking-widest hover:bg-lux-goldLight transition-all">
+                        Book Session ($30)
+                    </button>
+                </div>
+
+                <!-- Done For You Upwork & Website Build -->
+                <div class="p-8 bg-lux-card gold-border-glow flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 bg-lux-gold/10 text-lux-gold border border-lux-gold/30 text-[10px] font-bold uppercase tracking-wider">$100 - $150 USD</span>
+                        </div>
+                        <h3 class="font-cinzel text-xl font-bold mb-3">Complete Profile & Web Build</h3>
+                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
+                            Flat-fee productized setup. I write your bio copy, organize your portfolio structure, establish rate positioning, and build your custom personal website.
+                        </p>
+                    </div>
+                    <button onclick="openBookingModal('Done-For-You Profile & Website Build ($100-$150)', 'full-build')" class="w-full py-3.5 border border-lux-gold/50 text-lux-goldLight hover:bg-lux-gold hover:text-lux-black font-bold text-xs uppercase tracking-widest transition-all">
+                        Apply For Full Build
+                    </button>
+                </div>
+
+                <!-- Public Q&A Pipeline -->
+                <div class="p-8 bg-lux-card border border-lux-border flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-3 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] font-bold uppercase tracking-wider">Free Input</span>
+                        </div>
+                        <h3 class="font-cinzel text-xl font-bold mb-3">Ask Me Anything Reel</h3>
+                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed mb-6">
+                            Got a question about freelancing or pitching? DM your situation directly. Best questions get picked and answered on camera.
+                        </p>
+                    </div>
+                    <a href="https://www.instagram.com/youssefafifyy" target="_blank" class="w-full text-center py-3.5 bg-lux-dark border border-lux-border text-gray-300 font-bold text-xs uppercase tracking-widest hover:border-lux-gold transition-all">
+                        Send Question DM
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. RESOURCES: FREE VALUE VAULT (zip) + PAID FIELD GUIDE ($5) -->
+        <section id="vault" class="mb-20 md:mb-28">
+            <div class="p-8 md:p-12 bg-lux-card border border-lux-border">
+                <div class="max-w-2xl mb-8">
+                    <p class="text-lux-gold text-xs uppercase tracking-widest font-semibold mb-2">High Value Assets</p>
+                    <h2 class="font-cinzel text-2xl md:text-3xl font-bold mb-3">Free Value & Guides</h2>
+                    <p class="text-gray-400 text-xs md:text-sm">Grab the free vault of PDFs, or unlock the full freelancer's field guide.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Free Value Vault (ZIP download) -->
+                    <div class="p-6 bg-lux-dark border border-lux-border flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">100% Free Access</span>
+                            <h4 class="font-cinzel text-lg font-bold mt-2 mb-2">The Free Value Vault</h4>
+                            <p class="text-gray-400 text-xs mb-6">One click, one download. Every free guide, template, and cheat sheet bundled into a single ZIP file.</p>
+                        </div>
+                        <a href="https://drive.google.com/uc?export=download&id=1DivO-cMT8d4rrfHu3iIiaiyb4L4lkVDf" target="_blank" rel="noopener" class="py-3 border border-lux-gold/40 text-lux-gold text-center font-bold text-xs uppercase tracking-wider hover:bg-lux-gold hover:text-lux-black transition-all inline-flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-zipper"></i> Download Free Vault (.zip)
+                        </a>
+                    </div>
+
+                    <!-- Paid PDF Guide Modal Reader -->
+                    <div class="p-6 bg-lux-dark border border-lux-gold/40 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-lux-gold">$5.00 PDF Guide</span>
+                            <h4 class="font-cinzel text-lg font-bold mt-2 mb-2">How to Start as a Freelancer</h4>
+                            <p class="text-gray-400 text-xs mb-6">The Freelancer's Field Guide: Positioning, proposals, portfolios, client calls, and getting paid without a network.</p>
+                        </div>
+                        <button onclick="openFieldGuideModal()" class="py-3 bg-lux-gold text-lux-black text-center font-bold text-xs uppercase tracking-wider hover:bg-lux-goldLight transition-all">Read Field Guide ($5)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIO / BACKGROUND SECTION -->
+        <section class="mb-20 md:mb-28 p-8 md:p-12 bg-lux-dark border-l-2 border-lux-gold">
+            <h3 class="font-cinzel text-xl md:text-2xl font-bold mb-4 text-lux-cream">Engineer Mindset &bull; Freelance Operator</h3>
+            <p class="text-gray-300 text-xs md:text-sm leading-relaxed mb-4">
+                I'm a Computer Engineering student who turned to freelancing, learned how to navigate client acquisition, and built a consistent client pipeline.
+            </p>
+            <p class="text-gray-400 text-xs md:text-sm leading-relaxed">
+                If you need help starting your freelancing career, positioning your profile, or landing higher-ticket clients, I can help you structure your path without wasting time on guesswork.
+            </p>
+        </section>
+
+        <!-- FOOTER CTA -->
+        <footer class="text-center border-t border-lux-border/60 pt-16">
+            <h2 class="font-cinzel text-2xl md:text-4xl font-bold mb-4">Ready To Start Your Career?</h2>
+            <p class="text-gray-400 text-xs md:text-sm max-w-md mx-auto mb-8">
+                Book a $30 / 30-minute consultation call or drop a DM on Instagram for quick Q&A.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+                <button onclick="openBookingModal('1-on-1 Strategy Call', 'strategy-call')" class="px-8 py-3.5 bg-lux-gold text-lux-black font-bold text-xs uppercase tracking-widest hover:bg-lux-goldLight transition-all">
+                    Book A Consultation
+                </button>
+                <a href="https://www.instagram.com/youssefafifyy" target="_blank" class="px-8 py-3.5 border border-lux-border text-gray-300 font-bold text-xs uppercase tracking-widest hover:border-lux-gold transition-all">
+                    Send Instagram DM
+                </a>
+            </div>
+
+            <p class="text-[10px] uppercase tracking-widest text-gray-600">&copy; 2026 Youssef Afify.</p>
+        </footer>
+
+    </main>
+
+    <!-- BOOKING & SERVICE DETAILS MODAL -->
+    <div id="booking-modal" onclick="if(event.target===this) closeBookingModal()" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-blur bg-lux-black/90">
+        <div class="max-w-md w-full bg-lux-card border border-lux-gold/40 p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-gray-500 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h3 class="font-cinzel text-xl font-bold mb-1">Session Details</h3>
+            <p id="modal-service-subtitle" class="text-xs text-lux-gold mb-4">1-on-1 Strategy Call ($30 / 30 Mins)</p>
+
+            <!-- Detailed Breakdown Box (content swapped in via JS per service) -->
+            <div id="modal-breakdown-box" class="p-4 bg-lux-dark border border-lux-border mb-6 text-xs text-gray-300 space-y-2">
+                <p class="font-bold text-lux-goldLight">What you get in the 30-min consultation ($30):</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-400">
+                    <li>Full live profile restructuring (if you don't want the full build).</li>
+                    <li>How to start freelancing from scratch & pick your niche.</li>
+                    <li>Outreach, proposal frameworks, and handling client calls.</li>
+                    <li>Direct Q&A tailored to your specific bottlenecks.</li>
+                </ul>
+            </div>
+
+            <form action="https://formsubmit.co/y.a.afify28@gmail.com" method="POST" class="space-y-4">
+                <!-- Redirect back to your site after submitting -->
+                <input type="hidden" name="_next" value="https://yourdomain.com">
+                <input type="hidden" name="_subject" value="New Consultation Request!">
+                <input type="hidden" id="selected-service-input" name="Service" value="1-on-1 Strategy Call ($30 / 30 Mins)">
+
+                <div>
+                    <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">Your Name</label>
+                    <input type="text" name="Name" required class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">Your Email</label>
+                    <input type="email" name="Email" required class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">What do you need help with?</label>
+                    <textarea name="Message" rows="3" required placeholder="Tell me where you are currently stuck..." class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none"></textarea>
+                </div>
+
+                <button id="modal-submit-btn" type="submit" class="w-full py-3.5 bg-lux-gold text-lux-black font-bold text-xs uppercase tracking-widest hover:bg-lux-goldLight transition-all">
+                    Book A Consultation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FIELD GUIDE READER MODAL ($5 PDF) -->
+    <div id="field-guide-modal" onclick="if(event.target===this) closeFieldGuideModal()" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 modal-blur bg-lux-black/90">
+        <div class="max-w-4xl w-full bg-lux-card border border-lux-gold/40 p-6 md:p-8 relative max-h-[88vh] overflow-y-auto">
+            <button onclick="closeFieldGuideModal()" class="absolute top-5 right-5 text-gray-500 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 pr-8 mb-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-lux-gold">$5.00 Paid Field Guide &bull; Table of Contents</span>
+                <span class="text-[10px] px-2.5 py-0.5 bg-lux-gold/10 border border-lux-gold/30 text-lux-goldLight font-semibold">46 Pages &bull; 14 Parts &bull; Frameworks & Scripts</span>
+            </div>
+            
+            <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-lux-cream mb-1">The Freelancer's Field Guide</h2>
+            <p class="text-xs text-gray-400 mb-6">How to Start as a Freelancer & Land Better Clients &bull; By Youssef Afify</p>
+
+            <!-- Guide Overview Section -->
+            <div id="field-guide-content" class="space-y-6 text-xs md:text-sm text-gray-300 leading-relaxed border-t border-lux-border pt-4">
+                
+                <!-- Core Principle Banner -->
+                <div class="p-4 bg-lux-dark border border-lux-gold/30 rounded-sm">
+                    <h3 class="font-bold text-lux-goldLight text-sm mb-1">READ THIS FIRST: Skill is the floor, not the advantage</h3>
+                    <p class="text-gray-400 text-xs">
+                        What separates the freelancer earning $200 a month from the one earning $4,000 is almost never talent. It's four things: 
+                        <strong class="text-lux-cream">Findability</strong>, <strong class="text-lux-cream">Believability</strong>, <strong class="text-lux-cream">Ease</strong>, and <strong class="text-lux-cream">Persistence</strong>. You don't get hired for being good; you get hired for being the obvious, low-risk choice.
+                    </p>
+                </div>
+
+                <!-- PART ONE: CORE GUIDE (PARTS 1-9) -->
+                <div>
+                    <h3 class="font-cinzel font-bold text-lux-gold text-base mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Part One: The Core System (Parts 1 – 9)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 1: Positioning Formula</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Why generic profiles fail and the 3-part positioning formula to double your rates overnight.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 2: Proof & Portfolio</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">How to build a high-converting portfolio and case studies when you have zero past clients.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 3: Upwork Reality & Setup</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">The 6-point job filter checklist and non-Upwork channels to land your first contract fast.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 4: The Proposal Blueprint</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">The 6-part proposal framework, 8 proposal killers, and the exact P.S. line that boosts replies.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 5: Client Call Closing</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">15-minute call structure, key questions to control the call, and talking rates without flinching.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 6: Escrow & Milestones</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">How to structure non-negotiable payment milestones so you never work an unpaid hour.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 7: International Payouts</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">The exact breakdown of payout rails, holding USD, virtual cards, and avoiding bank markup.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 8: The 3 Acquisition Doors</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Systematic referrals, high-converting cold DM frameworks, and inbound client content.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm col-span-1 md:col-span-2">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 9: The 90-Day Execution Roadmap</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Week-by-week implementation plan to go from zero to booked solid without trial and error.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PART TWO: ADVANCED PLAYBOOK (PARTS 10-14 & APPENDICES) -->
+                <div>
+                    <h3 class="font-cinzel font-bold text-lux-gold text-base mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group"></i> Part Two: The Advanced Playbook (Parts 10 – 14 & Appendices)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 10: Multi-Platform Scale</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Diversifying across LinkedIn, Fiverr, and Contra without burning out.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 11: Pricing Math & Rates</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">The billable floor formula, 3-tier package strategy, and price-raise scripts.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 12: Contracts & IP Protection</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Kill fees, portfolio rights, liability caps, and late-payment enforcement steps.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 13: Capacity & Hiring</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Managing multiple clients, waitlisting, and making your first subcontractor hire.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Part 14: The Mindset Protocol</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Overcoming imposter syndrome, diagnosing sales bottlenecks, and burnout prevention.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Appendix A: Niche Positioning Library</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">12 real-world positioning examples across Dev, Design, Writing, Marketing, and Admin.</p>
+                        </div>
+                        <div class="p-3 bg-lux-dark border border-lux-border rounded-sm col-span-1 md:col-span-2">
+                            <h4 class="font-bold text-lux-cream text-xs mb-1">Appendix B: Copy-Paste Script Vault</h4>
+                            <p class="text-gray-400 text-[11px] leading-normal">Plug-and-play templates for Onboarding, Weekly Updates, Testimonials, Late Payments, and Offboarding.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action Box -->
+                <div class="p-5 bg-lux-dark border border-lux-gold/40 flex flex-col md:flex-row items-center justify-between gap-4 rounded-sm">
+                    <div>
+                        <h3 class="font-bold text-lux-goldLight text-sm mb-1">Get The Complete 46-Page System ($5)</h3>
+                        <p class="text-gray-400 text-xs">Unlock all 14 chapters, full frameworks, formulas, and word-for-word scripts.</p>
+                    </div>
+                    <button onclick="showPaymentUI()" class="px-8 py-3 bg-lux-gold text-lux-black font-bold text-xs uppercase tracking-wider hover:bg-lux-goldLight transition-all cursor-pointer whitespace-nowrap">
+                        Claim Full PDF ($5)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Options UI (Hidden by default) -->
+            <div id="field-guide-payment" class="hidden space-y-6 text-xs md:text-sm text-gray-300 border-t border-lux-border pt-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-cinzel text-lg font-bold text-lux-cream">Choose Payment Method</h3>
+                    <button onclick="hidePaymentUI()" class="text-xs text-lux-gold hover:underline">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Table of Contents
+                    </button>
+                </div>
+
+                <p class="text-gray-400 text-xs">
+                    Price: <strong class="text-lux-gold">$5 USD</strong> (~250 EGP). Select your preferred method below and send a screenshot after payment to get instant PDF access.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- InstaPay Option -->
+                    <div class="p-5 bg-lux-dark border border-lux-gold/40 rounded-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-mobile-screen-button text-lux-gold text-xl"></i>
+                            <h4 class="font-bold text-lux-cream text-sm">InstaPay (Local)</h4>
+                        </div>
+                        <p class="text-gray-400 text-xs mb-3">Transfer to the phone number directly via InstaPay:</p>
+                        
+                        <div class="p-3 bg-lux-black border border-lux-border flex items-center justify-between mb-3">
+                            <span id="instapay-num" class="font-mono text-lux-goldLight font-bold text-sm">+201004399994</span>
+                            <button onclick="copyInstapayNumber()" class="text-xs text-gray-400 hover:text-white">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-gray-500 italic">After sending, drop the screenshot on WhatsApp or Instagram to receive your link.</p>
+                    </div>
+
+                    <!-- WhatsApp / Direct DM Option -->
+                    <div class="p-5 bg-lux-dark border border-lux-border rounded-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
+                                <h4 class="font-bold text-lux-cream text-sm">WhatsApp Direct</h4>
+                            </div>
+                            <p class="text-gray-400 text-xs mb-4">Prefer to deal directly on WhatsApp or pay international options?</p>
+                        </div>
+
+                        <a href="https://wa.me/201004399994?text=Hey%20Youssef!%20I%20want%20to%20buy%20The%20Freelancer's%20Field%20Guide%20PDF%20($5)." target="_blank" class="w-full py-3 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider text-center hover:bg-emerald-500 transition-all inline-flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-lux-border flex justify-between items-center">
+                <p class="text-[10px] text-gray-500">Youssef Afify &bull; Field Guide Edition</p>
+                <button onclick="closeFieldGuideModal()" class="px-6 py-2.5 bg-lux-dark border border-lux-border text-gray-300 font-bold text-xs uppercase tracking-wider">Close Reader</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Three.js Background
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const count = 500;
+        const positions = new Float32Array(count * 3);
+
+        for (let i = 0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.012,
+            color: 0xd4af37,
+            transparent: true,
+            opacity: 0.4
+        });
+
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+        camera.position.z = 3;
+
+        function animate() {
+            particles.rotation.y += 0.0004;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ===== Review Carousel Logic (scroll-snap based) =====
+        // Instead of computing transforms with percentages (fragile across
+        // padding/box-sizing edge cases), we scroll the viewport itself by
+        // exactly one slide's pixel width. scroll-snap-type forces it to
+        // land perfectly on a slide boundary every time, so only one
+        // review is ever visible, with zero bleed from its neighbors.
+        let currentReviewIndex = 0;
+        let totalReviews = 0;
+        let reviewTrack;
+
+        function goToReview(index) {
+            const slides = reviewTrack.querySelectorAll('.review-slide');
+            currentReviewIndex = Math.max(0, Math.min(index, totalReviews - 1));
+            reviewTrack.scrollTo({
+                left: slides[currentReviewIndex].offsetLeft,
+                behavior: 'smooth'
+            });
+            updateDots();
+        }
+
+        function nextReview() {
+            goToReview((currentReviewIndex + 1) % totalReviews);
+        }
+
+        function prevReview() {
+            goToReview((currentReviewIndex - 1 + totalReviews) % totalReviews);
+        }
+
+        function updateDots() {
+            document.querySelectorAll('#review-dots button').forEach((dot, i) => {
+                if (i === currentReviewIndex) {
+                    dot.classList.add('bg-lux-gold', 'w-5');
+                    dot.classList.remove('bg-lux-border', 'w-2');
+                } else {
+                    dot.classList.add('bg-lux-border', 'w-2');
+                    dot.classList.remove('bg-lux-gold', 'w-5');
+                }
+            });
+        }
+
+        function initCarousel() {
+            reviewTrack = document.getElementById('review-track');
+            const slides = reviewTrack.querySelectorAll('.review-slide');
+            totalReviews = slides.length;
+
+            // Build dot indicators
+            const dotsWrap = document.getElementById('review-dots');
+            dotsWrap.innerHTML = '';
+            for (let i = 0; i < totalReviews; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'w-2 h-2 rounded-full bg-lux-border transition-all';
+                dot.onclick = () => goToReview(i);
+                dotsWrap.appendChild(dot);
+            }
+            updateDots();
+
+            // Keep the snap position correct on resize (slide widths change)
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    reviewTrack.scrollTo({ left: slides[currentReviewIndex].offsetLeft, behavior: 'auto' });
+                }, 150);
+            });
+
+            // Keep dots in sync if the user swipes manually on mobile
+            let scrollTimer;
+            reviewTrack.addEventListener('scroll', () => {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(() => {
+                    const viewportCenter = reviewTrack.scrollLeft + (reviewTrack.clientWidth / 2);
+                    slides.forEach((slide, i) => {
+                        if (viewportCenter >= slide.offsetLeft && viewportCenter < slide.offsetLeft + slide.offsetWidth) {
+                            currentReviewIndex = i;
+                        }
+                    });
+                    updateDots();
+                }, 100);
+            });
+        }
+
+        function toggleReadMore(elemId, btn) {
+            const p = document.getElementById(elemId);
+            if (p.classList.contains('clamp-text')) {
+                p.classList.remove('clamp-text');
+                btn.innerText = 'Show Less';
+            } else {
+                p.classList.add('clamp-text');
+                btn.innerText = 'Read Full Review';
+            }
+        }
+
+        initCarousel();
+
+        // Modals
+        const bookingBreakdowns = {
+            'strategy-call': `
+                <p class="font-bold text-lux-goldLight">What you get in the 30-min consultation ($30):</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-400">
+                    <li>Full live profile restructuring (if you don't want the full build).</li>
+                    <li>How to start freelancing from scratch & pick your niche.</li>
+                    <li>Outreach, proposal frameworks, and handling client calls.</li>
+                    <li>Direct Q&A tailored to your specific bottlenecks.</li>
+                </ul>
+            `,
+            'full-build': `
+                <p class="font-bold text-lux-goldLight">Instead of giving you vague advice, I physically build and structure your entire client acquisition engine for a flat fee ($100&ndash;$150).</p>
+                <p class="text-gray-300 mt-2">Here is everything I handle for you:</p>
+                <ol class="list-decimal list-inside space-y-2 text-gray-400 mt-2">
+                    <li><strong class="text-lux-cream">High-Converting Bio Copy & Headline:</strong> I write your main overview and specialized headlines engineered to hook clients in the first 2 lines.</li>
+                    <li><strong class="text-lux-cream">Portfolio & Case Study Restructuring:</strong> I organize your work samples, write case-study context for each piece, and format them to prove ROI.</li>
+                    <li><strong class="text-lux-cream">Rate Positioning Strategy:</strong> We set your hourly rate and fixed-price packages so you stop competing on price with low-ballers.</li>
+                    <li><strong class="text-lux-cream">Custom Personal Landing Page:</strong> I build and deploy your own personal single-page website (similar to mine) so you can pitch clients off-platform.</li>
+                    <li><strong class="text-lux-cream">Direct Strategy Handoff Call:</strong> 1-on-1 walkthrough where I hand over the keys and show you how to start sending proposals immediately.</li>
+                </ol>
+                <p class="text-gray-300 mt-3">If you want to skip the trial-and-error and launch with a high-converting setup, let me know and we can get started this week!</p>
+            `
+        };
+
+        const bookingSubmitLabels = {
+            'strategy-call': 'Book A Consultation',
+            'full-build': 'Send Application Request'
+        };
+
+        function openBookingModal(service, breakdownType) {
+            const type = breakdownType || 'strategy-call';
+            document.getElementById('selected-service-input').value = service;
+            document.getElementById('modal-service-subtitle').innerText = `Service Selected: ${service}`;
+            document.getElementById('modal-breakdown-box').innerHTML = bookingBreakdowns[type] || bookingBreakdowns['strategy-call'];
+            document.getElementById('modal-submit-btn').innerText = bookingSubmitLabels[type] || bookingSubmitLabels['strategy-call'];
+            const m = document.getElementById('booking-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeBookingModal() {
+            const m = document.getElementById('booking-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function showPaymentUI() {
+            document.getElementById('field-guide-content').classList.add('hidden');
+            document.getElementById('field-guide-payment').classList.remove('hidden');
+        }
+
+        function hidePaymentUI() {
+            document.getElementById('field-guide-payment').classList.add('hidden');
+            document.getElementById('field-guide-content').classList.remove('hidden');
+        }
+
+        function copyInstapayNumber() {
+            const num = document.getElementById('instapay-num').innerText;
+            navigator.clipboard.writeText(num);
+            alert('InstaPay number copied: ' + num);
+        }
+
+        function openFieldGuideModal() {
+            hidePaymentUI(); // Always open with Table of Contents visible
+            const m = document.getElementById('field-guide-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeFieldGuideModal() {
+            hidePaymentUI();
+            const m = document.getElementById('field-guide-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+    </script>
+</body>
+
+</html>
