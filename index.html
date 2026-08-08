@@ -901,30 +901,11 @@
                 </div>
 
                 <p class="text-gray-400 text-xs">
-                    Price: <strong class="text-lux-gold">$5 USD</strong> (~250 EGP). Select your preferred method below
-                    and send a screenshot after payment to get instant PDF access.
+                    Price: <strong class="text-lux-gold">$5 USD</strong> (~250 EGP). Message me on WhatsApp to sort
+                    out payment and get instant PDF access.
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- InstaPay Option -->
-                    <div class="p-5 bg-lux-dark border border-lux-gold/40 rounded-sm">
-                        <div class="flex items-center gap-3 mb-3">
-                            <i class="fa-solid fa-mobile-screen-button text-lux-gold text-xl"></i>
-                            <h4 class="font-bold text-lux-cream text-sm">InstaPay (Local)</h4>
-                        </div>
-                        <p class="text-gray-400 text-xs mb-3">Transfer to the phone number directly via InstaPay:</p>
-
-                        <div class="p-3 bg-lux-black border border-lux-border flex items-center justify-between mb-3">
-                            <span id="instapay-num"
-                                class="font-mono text-lux-goldLight font-bold text-sm">+201004399994</span>
-                            <button onclick="copyInstapayNumber()" class="text-xs text-gray-400 hover:text-white">
-                                <i class="fa-regular fa-copy"></i> Copy
-                            </button>
-                        </div>
-                        <p class="text-[11px] text-gray-500 italic">After sending, drop the screenshot on WhatsApp or
-                            Instagram to receive your link.</p>
-                    </div>
-
+                <div class="grid grid-cols-1 gap-4">
                     <!-- WhatsApp / Direct DM Option -->
                     <div class="p-5 bg-lux-dark border border-lux-border rounded-sm flex flex-col justify-between">
                         <div>
@@ -932,8 +913,8 @@
                                 <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
                                 <h4 class="font-bold text-lux-cream text-sm">WhatsApp Direct</h4>
                             </div>
-                            <p class="text-gray-400 text-xs mb-4">Prefer to deal directly on WhatsApp or pay
-                                international options?</p>
+                            <p class="text-gray-400 text-xs mb-4">Chat directly on WhatsApp to arrange payment
+                                (local or international).</p>
                         </div>
 
                         <a href="https://wa.me/201004399994?text=Hey%20Youssef!%20I%20want%20to%20buy%20The%20Freelancer's%20Field%20Guide%20PDF%20($5)."
@@ -1186,12 +1167,6 @@
         function hidePaymentUI() {
             document.getElementById('field-guide-payment').classList.add('hidden');
             document.getElementById('field-guide-content').classList.remove('hidden');
-        }
-
-        function copyInstapayNumber() {
-            const num = document.getElementById('instapay-num').innerText;
-            navigator.clipboard.writeText(num);
-            alert('InstaPay number copied: ' + num);
         }
 
         function openFieldGuideModal() {
