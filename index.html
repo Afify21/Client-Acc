@@ -9,6 +9,7 @@
     <!-- CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- Typography & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -703,31 +704,30 @@
                 </ul>
             </div>
 
-            <form action="https://formsubmit.co/y.a.afify28@gmail.com" method="POST" class="space-y-4">
-                <!-- Redirect back to your site after submitting -->
-                <input type="hidden" name="_next" value="https://yourdomain.com">
-                <input type="hidden" name="_subject" value="New Consultation Request!">
-                <input type="hidden" id="selected-service-input" name="Service"
+            <form id="booking-form" onsubmit="return sendBookingEmail(event)" class="space-y-4">
+                <input type="hidden" id="selected-service-input" name="service"
                     value="1-on-1 Strategy Call ($30 / 30 Mins)">
 
                 <div>
                     <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">Your Name</label>
-                    <input type="text" name="Name" required
+                    <input type="text" name="name" required
                         class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none">
                 </div>
 
                 <div>
                     <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">Your Email</label>
-                    <input type="email" name="Email" required
+                    <input type="email" name="email" required
                         class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none">
                 </div>
 
                 <div>
                     <label class="text-[10px] uppercase tracking-wider text-gray-400 block mb-1">What do you need help
                         with?</label>
-                    <textarea name="Message" rows="3" required placeholder="Tell me where you are currently stuck..."
+                    <textarea name="message" rows="3" required placeholder="Tell me where you are currently stuck..."
                         class="w-full bg-lux-dark border border-lux-border p-3 text-xs text-white focus:border-lux-gold focus:outline-none"></textarea>
                 </div>
+
+                <p id="booking-form-status" class="text-xs hidden"></p>
 
                 <button id="modal-submit-btn" type="submit"
                     class="w-full py-3.5 bg-lux-gold text-lux-black font-bold text-xs uppercase tracking-widest hover:bg-lux-goldLight transition-all">
@@ -955,6 +955,47 @@
     </div>
 
     <script>
+        // ===== EmailJS Setup =====
+        // 1. Create a free account at https://www.emailjs.com
+        // 2. Add an Email Service (connect the Gmail you want submissions sent to)
+        // 3. Create an Email Template with variables: {{name}} {{email}} {{message}} {{service}}
+        // 4. Replace the three placeholders below with your real values from the EmailJS dashboard.
+        const EMAILJS_PUBLIC_KEY = "d5mOeag9LwWg0JkFKaQIh";
+        const EMAILJS_SERVICE_ID = "service_7g8546x";
+        const EMAILJS_TEMPLATE_ID = "template_b3gkggo";
+
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+        function sendBookingEmail(event) {
+            event.preventDefault();
+            const form = document.getElementById('booking-form');
+            const btn = document.getElementById('modal-submit-btn');
+            const status = document.getElementById('booking-form-status');
+            const originalBtnText = btn.innerText;
+
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+            status.classList.add('hidden');
+
+            emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
+                .then(() => {
+                    status.textContent = "Thanks — your request has been sent. I'll get back to you shortly.";
+                    status.className = 'text-xs text-emerald-400';
+                    form.reset();
+                    btn.innerText = originalBtnText;
+                    btn.disabled = false;
+                })
+                .catch((err) => {
+                    status.textContent = "Something went wrong sending your request. Please try again or DM on Instagram.";
+                    status.className = 'text-xs text-red-400';
+                    btn.innerText = originalBtnText;
+                    btn.disabled = false;
+                    console.error('EmailJS error:', err);
+                });
+
+            return false;
+        }
+
         // Three.js Background
         const canvas = document.getElementById('bg-canvas');
         const scene = new THREE.Scene();
